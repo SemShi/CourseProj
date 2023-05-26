@@ -98,3 +98,9 @@ body {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
+
+.toast{
+  bottom: 15px;
+  right: 15px;
+  z-index: 9999;
+}
