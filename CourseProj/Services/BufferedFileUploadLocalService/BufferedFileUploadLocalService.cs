@@ -2,10 +2,18 @@
 
 public class BufferedFileUploadLocalService : IBufferedFileUploadLocalService
 {
-    public async Task<bool> UploadFile(IFormFile file)
+    public bool IsCsvFile(IFormFile file)
+    {
+        if(file == null) return false;
+        var name = file.ContentType;
+        if (file.ContentType != "text/csv") return false;
+        return true;
+    }
+    
+    public async Task<string> UploadFile(IFormFile file)
     {
     
-        if (Path.GetExtension(file.FileName) != ".csv") return false;
+        if (Path.GetExtension(file.FileName) != ".csv") return "";
         string path = "";
         try
         {
@@ -19,15 +27,17 @@ public class BufferedFileUploadLocalService : IBufferedFileUploadLocalService
                 using (var fileStream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
+                    
                 }
-                return true;
+                //return true;
             }
-            else
-                return false;
+            // else
+            //     return false;
         }
         catch (Exception ex)
         {
             throw new Exception("File Copy Failed", ex);
         }
+        return Path.Combine(path, file.FileName);
     }
 }

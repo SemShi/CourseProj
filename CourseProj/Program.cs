@@ -1,10 +1,12 @@
 using CourseProj.Services;
+using CourseProj.Services.AnalyzeDataset;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IBufferedFileUploadLocalService, BufferedFileUploadLocalService>();
+builder.Services.AddSingleton<IRaschetDannih, RaschetDannih>();
 
 var app = builder.Build();
 

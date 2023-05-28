@@ -2,5 +2,6 @@
 
 public interface IBufferedFileUploadLocalService
 {
-    Task<bool> UploadFile(IFormFile file);
+    Task<string> UploadFile(IFormFile file);
+    bool IsCsvFile(IFormFile file);
 }

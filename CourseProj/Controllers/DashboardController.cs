@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using CourseProj.Models;
 using CourseProj.Services;
+using CourseProj.Services.AnalyzeDataset;
 
 namespace CourseProj.Controllers;
 
@@ -9,13 +11,16 @@ public class DashboardController : Controller
 {
     private readonly ILogger<DashboardController> _logger;
     private readonly IBufferedFileUploadLocalService _bufferedFileUploadService;
+    private readonly IRaschetDannih _raschetDannih;
 
     public DashboardController(
         ILogger<DashboardController> logger, 
-        IBufferedFileUploadLocalService bufferedFileUploadService)
+        IBufferedFileUploadLocalService bufferedFileUploadService,
+        IRaschetDannih raschetDannih)
     {
         _logger = logger;
         _bufferedFileUploadService = bufferedFileUploadService;
+        _raschetDannih = raschetDannih;
     }
 
     public IActionResult Index()
@@ -30,7 +35,8 @@ public class DashboardController : Controller
         try
         {
             _logger.LogInformation("Start upload file " + file.FileName);
-            if (await _bufferedFileUploadService.UploadFile(file))
+            //if (await _bufferedFileUploadService.UploadFile(file))
+            if (true)    
             {
                 ViewBag.Message = "Файл успешно загружен.";
                 ViewBag.Result = true;
@@ -49,6 +55,18 @@ public class DashboardController : Controller
             ViewBag.Result = false;
         }
         return View();
+    }
+    
+    [HttpPost]
+    public async Task<string> GetData(FormData formData)
+    {
+        if (!_bufferedFileUploadService.IsCsvFile(formData.file)) throw new Exception("Неверный формат файла");
+        string filePath = await _bufferedFileUploadService.UploadFile(formData.file);
+        var firstDatas = formData.Parameter == "Height" ? 
+            await _raschetDannih.GetHeight(filePath, formData.Gender) : 
+            await _raschetDannih.GetWeight(filePath, formData.Gender);
+        var result = _raschetDannih.GetDataToNormalRaspred(firstDatas);
+        return JsonSerializer.Serialize(result);
     }
     
     public IActionResult About()
