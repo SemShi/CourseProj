@@ -1,6 +1,9 @@
 console.log('start');
 let data;
+const ctx = document.getElementById('myChart');
+
 document.getElementById('form').onsubmit = function () {
+    if (data != null) ctx = document.getElementById("myChart").innerHTML = '<canvas id="myChart"></canvas>';
     var input = document.getElementById("file");
     var file = input.files[0];
     var gender = document.getElementById("gender");
@@ -20,16 +23,15 @@ document.getElementById('form').onsubmit = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             data = JSON.parse(xhr.responseText)
             console.log(data)
-            drawChart(data.finalObjectsList)
-            if (data.NabludZnach > 43.8) drawOtchet(data.KriteriyPirsona, data.NabludZnach, data.Otclon, data.ViborSred, vivod = "�����������")
-            else drawOtchet(data.KriteriyPirsona, data.NabludZnach, data.Otclon, data.ViborSred, vivod = "������������")
             tableFromJson(data.finalObjectsList)
+            drawChart(data.finalObjectsList)
+            if (data.NabludZnach > 43.8) drawOtchet(data.KriteriyPirsona, data.NabludZnach, data.Otclon, data.ViborSred, vivod = "опровергаем")
+            else drawOtchet(data.KriteriyPirsona, data.NabludZnach, data.Otclon, data.ViborSred, vivod = "подтверждаем")
         }
     }
     return false;
 }
 
-const ctx = document.getElementById('myChart');
 
 function drawChart(arr) {
     let intervalArr = [];
@@ -52,12 +54,14 @@ function drawChart(arr) {
                 {
                     label: "Количество",
                     data: dataArr,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: '#9BD0F5'
                 },
                 {
                     label: "Теоретическая частота",
                     data: teorFreq,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: '#FFB1C1'
                 }]
         },
         options: {
@@ -81,7 +85,7 @@ function tableFromJson(object) {
     }
 
     // Create table.
-    const table = document.createElement("table");
+    const table = document.getElementById("table");
 
     // Create table header row using the extracted headers above.
     let tr = table.insertRow(-1);                   // table row.
@@ -104,7 +108,7 @@ function tableFromJson(object) {
     }
 
     // Now, add the newly created table with json data, to a container.
-    const divShowData = document.getElementById('showData');
+    const divShowData = document.getElementById('calcResult');
     divShowData.innerHTML = "";
     divShowData.appendChild(table);
 }

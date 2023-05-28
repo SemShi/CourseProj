@@ -30,39 +30,11 @@ public class DashboardController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> Index(IFormFile file)
-    {
-        try
-        {
-            _logger.LogInformation("Start upload file " + file.FileName);
-            //if (await _bufferedFileUploadService.UploadFile(file))
-            if (true)    
-            {
-                ViewBag.Message = "Файл успешно загружен.";
-                ViewBag.Result = true;
-                _logger.LogInformation("File " + file.FileName + " successfully uploaded!");
-            }
-            else
-            {
-                ViewBag.Message = "Возникла ошибка при загрузке файла";
-                ViewBag.Result = false;
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-            ViewBag.Message = "File Upload Failed";
-            ViewBag.Result = false;
-        }
-        return View();
-    }
-    
-    [HttpPost]
     public async Task<string> GetData(FormData formData)
     {
         if (!_bufferedFileUploadService.IsCsvFile(formData.file)) throw new Exception("Неверный формат файла");
         string filePath = await _bufferedFileUploadService.UploadFile(formData.file);
-        var firstDatas = formData.Parameter == "Height" ? 
+        var firstDatas = formData.Param == "Weight" ? 
             await _raschetDannih.GetHeight(filePath, formData.Gender) : 
             await _raschetDannih.GetWeight(filePath, formData.Gender);
         var result = _raschetDannih.GetDataToNormalRaspred(firstDatas);
