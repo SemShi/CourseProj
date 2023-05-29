@@ -1,9 +1,26 @@
-console.log('start');
 let data;
-const ctx = document.getElementById('myChart');
+let ctx;// = new Chart(document.getElementById('myChart')) ;
 
 document.getElementById('form').onsubmit = function () {
-    if (data != null) ctx = document.getElementById("myChart").innerHTML = '<canvas id="myChart"></canvas>';
+    try{
+        let oldctx = document.getElementById("myChart");
+        oldctx.remove();
+        let oldtable = document.getElementById("table");
+        oldtable.innerHTML = '';
+        let oldReport = document.getElementById("showOtchet");
+        oldReport.innerHTML = '';
+    }
+    catch (ex){}
+    let canvas = document.createElement('canvas');
+    canvas.setAttribute("class", "my-4 w-100")
+    canvas.setAttribute('id', 'myChart');
+    canvas.setAttribute('width', '900');
+    canvas.setAttribute('height', '380');
+    let canvasContainer = document.createElement('div');
+    canvasContainer.appendChild(canvas);
+    document.getElementById("charts").appendChild(canvasContainer);
+    ctx = new Chart(document.getElementById('myChart'));
+    
     var input = document.getElementById("file");
     var file = input.files[0];
     var gender = document.getElementById("gender");
@@ -110,6 +127,7 @@ function tableFromJson(object) {
     // Now, add the newly created table with json data, to a container.
     const divShowData = document.getElementById('calcResult');
     divShowData.innerHTML = "";
+    divShowData.innerHTML = "<h2>Результаты вычислений</h2>";
     divShowData.appendChild(table);
 }
 
