@@ -1,4 +1,6 @@
-﻿namespace CourseProj.Services;
+﻿using System.Globalization;
+
+namespace CourseProj.Services;
 
 public class BufferedFileUploadLocalService : IBufferedFileUploadLocalService
 {
@@ -24,15 +26,10 @@ public class BufferedFileUploadLocalService : IBufferedFileUploadLocalService
                 {
                     Directory.CreateDirectory(path);
                 }
+                
                 using (var fileStream = new FileStream(Path.Combine(path, file.FileName), FileMode.Create))
-                {
                     await file.CopyToAsync(fileStream);
-                    
-                }
-                //return true;
             }
-            // else
-            //     return false;
         }
         catch (Exception ex)
         {

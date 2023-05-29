@@ -13,3 +13,19 @@ function ShowInput(){
         input.style['display'] = 'none';
     }
 }
+
+function ShowSelectedFile(Visible = true, FileName = null, FilePath = null){
+    if(Visible){
+        document.getElementById("fileUpload").style['display'] = 'none';
+        document.getElementById("hiddenSelected").style['display'] = '';
+        document.getElementById("hiddenSelected").setAttribute('data-value', FilePath);
+        document.getElementById("hiddenLabel").innerHTML = 'Выбран файл: ' + '<b>'+FileName+'</b>';
+    }
+    else{
+        document.getElementById("fileUpload").style['display'] = '';
+        document.getElementById("hiddenSelected").style['display'] = 'none';
+        document.getElementById("hiddenSelected").removeAttribute('value');
+        document.getElementById("hiddenLabel").innerHTML = '';
+    }
+    
+}

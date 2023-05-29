@@ -1,16 +1,18 @@
 let data;
-let ctx;// = new Chart(document.getElementById('myChart')) ;
+let ctx;
 
-document.getElementById('form').onsubmit = function () {
-    try{
-        let oldctx = document.getElementById("myChart");
-        oldctx.remove();
-        let oldtable = document.getElementById("table");
-        oldtable.innerHTML = '';
-        let oldReport = document.getElementById("showOtchet");
-        oldReport.innerHTML = '';
-    }
-    catch (ex){}
+document.getElementById('form').onsubmit = function (){
+try
+{
+    let oldctx = document.getElementById("myChart");
+    oldctx.remove();
+    let oldtable = document.getElementById("table");
+    oldtable.innerHTML = '';
+    let oldReport = document.getElementById("showOtchet");
+    oldReport.innerHTML = '';
+}
+catch (ex){}
+    
     let canvas = document.createElement('canvas');
     canvas.setAttribute("class", "my-4 w-100")
     canvas.setAttribute('id', 'myChart');
@@ -20,9 +22,19 @@ document.getElementById('form').onsubmit = function () {
     canvasContainer.appendChild(canvas);
     document.getElementById("charts").appendChild(canvasContainer);
     ctx = new Chart(document.getElementById('myChart'));
-    
-    var input = document.getElementById("file");
-    var file = input.files[0];
+    var file;
+    var source;
+    var filePath;
+    if(document.getElementById('hiddenSelected').getAttribute('data-value') === null){
+        var input = document.getElementById("file");
+        file = input.files[0];
+        source = 'client';
+    }
+    else{
+        filePath = document.getElementById('hiddenSelected').getAttribute('data-value');
+        source = 'server';
+    }
+
     var gender = document.getElementById("gender");
     var genderValue = gender.value;
     var param = document.getElementById("param");
@@ -32,6 +44,8 @@ document.getElementById('form').onsubmit = function () {
     formData.append("file", file);
     formData.append("gender", genderValue);
     formData.append("param", paramValue);
+    formData.append("source", source);
+    formData.append("filepath", filePath);
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/Dashboard/GetData');
@@ -46,9 +60,7 @@ document.getElementById('form').onsubmit = function () {
             else drawOtchet(data.KriteriyPirsona, data.NabludZnach, data.Otclon, data.ViborSred, vivod = "подтверждаем")
         }
     }
-    return false;
-}
-
+}; 
 
 function drawChart(arr) {
     let intervalArr = [];

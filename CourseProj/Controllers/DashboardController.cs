@@ -3,7 +3,6 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using CourseProj.Models;
 using CourseProj.Services;
-using CourseProj.Services.AnalyzeDataset;
 
 namespace CourseProj.Controllers;
 
@@ -12,32 +11,43 @@ public class DashboardController : Controller
     private readonly ILogger<DashboardController> _logger;
     private readonly IBufferedFileUploadLocalService _bufferedFileUploadService;
     private readonly IRaschetDannih _raschetDannih;
+    private readonly IGetDatasetsService _getDatasetsService;
 
     public DashboardController(
         ILogger<DashboardController> logger, 
         IBufferedFileUploadLocalService bufferedFileUploadService,
-        IRaschetDannih raschetDannih)
+        IRaschetDannih raschetDannih,
+        IGetDatasetsService getDatasetsService)
     {
         _logger = logger;
         _bufferedFileUploadService = bufferedFileUploadService;
         _raschetDannih = raschetDannih;
+        _getDatasetsService = getDatasetsService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         ViewBag.Result = false;
+        ViewBag.model = await _getDatasetsService.GetFiles();
         return View();
     }
     
     [HttpPost]
     public async Task<string> GetData(FormData formData)
     {
-        if (!_bufferedFileUploadService.IsCsvFile(formData.file)) throw new Exception("Неверный формат файла");
-        string filePath = await _bufferedFileUploadService.UploadFile(formData.file);
-        var firstDatas = formData.Param == "Weight" ? 
+        string filePath = "";
+        if (formData.Source == "client")
+        {
+            if (!_bufferedFileUploadService.IsCsvFile(formData.file)) throw new Exception("Неверный формат файла");
+            filePath = await _bufferedFileUploadService.UploadFile(formData.file);
+        }
+        else
+            filePath = formData.FilePath!;
+
+        var firstData = formData.Param == "Weight" ? 
             await _raschetDannih.GetHeight(filePath, formData.Gender) : 
             await _raschetDannih.GetWeight(filePath, formData.Gender);
-        var result = _raschetDannih.GetDataToNormalRaspred(firstDatas);
+        var result = _raschetDannih.GetDataToNormalRaspred(firstData);
         return JsonSerializer.Serialize(result);
     }
     

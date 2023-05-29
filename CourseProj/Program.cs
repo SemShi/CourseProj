@@ -1,5 +1,4 @@
 using CourseProj.Services;
-using CourseProj.Services.AnalyzeDataset;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IBufferedFileUploadLocalService, BufferedFileUploadLocalService>();
 builder.Services.AddSingleton<IRaschetDannih, RaschetDannih>();
+builder.Services.AddSingleton<IGetDatasetsService, GetDatasetsService>();
 
 var app = builder.Build();
 

@@ -2,7 +2,7 @@ using System.Globalization;
 using CourseProj.Models.Calculating;
 using CsvHelper;
 
-namespace CourseProj.Services.AnalyzeDataset;
+namespace CourseProj.Services;
 
 public class RaschetDannih : IRaschetDannih
 {

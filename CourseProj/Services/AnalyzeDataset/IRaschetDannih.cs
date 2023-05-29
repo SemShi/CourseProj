@@ -1,6 +1,6 @@
 using CourseProj.Models.Calculating;
 
-namespace CourseProj.Services.AnalyzeDataset;
+namespace CourseProj.Services;
 
 public interface IRaschetDannih
 {
