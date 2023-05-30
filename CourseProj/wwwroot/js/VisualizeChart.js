@@ -1,3 +1,6 @@
+import drawChart from '../Scripts/drawChart.js'
+import { tableFromJson, widthTable } from "../Scripts/drawTable.js"
+
 let data;
 let ctx;
 
@@ -55,99 +58,26 @@ catch (ex){}
             data = JSON.parse(xhr.responseText)
             console.log(data)
             tableFromJson(data.finalObjectsList)
-            drawChart(data.finalObjectsList)
-            if (data.NabludZnach > 43.8) drawOtchet(data.KriteriyPirsona, data.NabludZnach, data.Otclon, data.ViborSred, vivod = "опровергаем")
-            else drawOtchet(data.KriteriyPirsona, data.NabludZnach, data.Otclon, data.ViborSred, vivod = "подтверждаем")
+            drawChart(data.finalObjectsList, ctx)
+            if (data.NabludZnach > 43.8) drawOtchet(data, "опровергаем")
+            else drawOtchet(data, "подтверждаем")
         }
     }
 }; 
 
-function drawChart(arr) {
-    let intervalArr = [];
-    for (let elem of arr) {
-        intervalArr.push(elem.Interval);
-    }
-    let teorFreq = [];
-    for (let elem of arr) {
-        teorFreq.push(elem.TeorChastota);
-    }
-    let dataArr = [];
-    for (let elem of arr) {
-        dataArr.push(elem.Count);
-    }
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: intervalArr,
-            datasets: [
-                {
-                    label: "Количество",
-                    data: dataArr,
-                    borderWidth: 1,
-                    backgroundColor: '#9BD0F5'
-                },
-                {
-                    label: "Теоретическая частота",
-                    data: teorFreq,
-                    borderWidth: 1,
-                    backgroundColor: '#FFB1C1'
-                }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                }
-            }
-        }
-    });
-}
 
-function tableFromJson(object) {
-    let col = [];
-    for (let i = 0; i < object.length; i++) {
-        for (let key in object[i]) {
-            if (col.indexOf(key) === -1) {
-                col.push(key);
-            }
-        }
-    }
 
-    // Create table.
-    const table = document.getElementById("table");
-
-    // Create table header row using the extracted headers above.
-    let tr = table.insertRow(-1);                   // table row.
-
-    for (let i = 0; i < col.length; i++) {
-        let th = document.createElement("th");      // table header.
-        th.innerHTML = col[i];
-        tr.appendChild(th);
-    }
-
-    // add json data to the table as rows.
-    for (let i = 0; i < object.length; i++) {
-
-        tr = table.insertRow(-1);
-
-        for (let j = 0; j < col.length; j++) {
-            let tabCell = tr.insertCell(-1);
-            tabCell.innerHTML = object[i][col[j]];
-        }
-    }
-
-    // Now, add the newly created table with json data, to a container.
-    const divShowData = document.getElementById('calcResult');
-    divShowData.innerHTML = "";
-    divShowData.innerHTML = "<h2>Результаты вычислений</h2>";
-    divShowData.appendChild(table);
-}
-
-function drawOtchet(kriteriyPirsona, nabludZnach, otclon, viborSred, vivod) {
+function drawOtchet(data, vivod) {
+    var param = document.getElementById("param");
+    var paramValue = param.value;
     var div = document.getElementById('showOtchet');
-    div.innerHTML += `KriteriyPirsona ${kriteriyPirsona} <br>  
-    Nablud znch: ${nabludZnach} <br>  
-    Otclon: ${otclon} <br>  
-    Viborochnaya sred: ${viborSred}  <br>  
-    Viviod: ${vivod} `;
+    div.innerHTML += `<p>При анализе данных была получена выборочная средняя всех интервалов, которая равна ${data.ViborSred}, на ее основе  посчитаем стандартное отклонение: ${data.Otclon}. <br>Эти данные необходимы для нахождения теоритической частоты по функции Гаусса</p>
+    <p>Так как Критерий пирсона равен ${data.KriteriyPirsona}, то при уровне значимости alpha = 0.05 по таблице "Критической точки распределения" значение Hi^2 наблюдаемого должно быть меньше Hi^2 критической, равной 42.8.<br>  
+    В нашем случае Hi^2 наблюдаемое равно: ${data.NabludZnach},значит гипотезу о нормальном распределении ${vivod}.`;
+    if (vivod == "опровергаем") div.innerHTML += "<p>Следовательно мы не можем полностью пологаться на эти данные. Распределение мощностей на выпускаемую продукцию компании не обосновывается данной выборкой.</p>"
+    else {
+        div.innerHTML += "<p>На основе данных составим таблицу с процентным соотношением выпускаемой продукции.</p>"
+        if (paramValue == "Height") heightTable(data.finalObjectsList)
+        else widthTable(data.finalObjectsList)
+    }
 }

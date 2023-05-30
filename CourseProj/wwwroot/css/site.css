@@ -104,3 +104,8 @@ body {
   right: 15px;
   z-index: 9999;
 }
+
+p{
+    font-size: 22px;
+    font-family: 'Times New Roman';
+}
