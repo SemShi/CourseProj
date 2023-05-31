@@ -8,7 +8,7 @@ document.getElementById('form').onsubmit = function (){
 try
 {
     document.getElementById("myChart").remove();
-    document.getElementById("table").innerHTML = '';
+    document.getElementById("calcResult").innerHTML = '';
     document.getElementById("showOtchet").innerHTML = '';
     document.getElementById("showTable").innerHTML = '';
 }

@@ -27,5 +27,32 @@ function ShowSelectedFile(Visible = true, FileName = null, FilePath = null){
         document.getElementById("hiddenSelected").removeAttribute('value');
         document.getElementById("hiddenLabel").innerHTML = '';
     }
+}
+
+function downloadReport() {
     
+    var element = document.getElementById('downloadableReport');
+    var opt = {
+        margin: 1,
+        filename: 'report_'+ GetCurrentDateTime() +'.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, logging: true, dpi: 1200, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'l' }
+    };
+
+    // New Promise-based usage:
+    html2pdf().set(opt).from(element).save();
+
+    // Old monolithic-style usage:
+    html2pdf(element, opt);
+}
+
+function GetCurrentDateTime(){
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy = today.getFullYear();
+    let hh = String(today.getHours());
+    let ss = String(today.getSeconds());
+    return mm + dd + yyyy + '_' + hh + ss;
 }
