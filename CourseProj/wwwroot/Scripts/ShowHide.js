@@ -29,3 +29,20 @@ function ShowSelectedFile(Visible = true, FileName = null, FilePath = null){
     }
     
 }
+
+function downloadReport() {
+    var element = document.getElementById('report');
+    var opt = {
+        margin: 1,
+        filename: 'report_'+  new Date() +'.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, logging: true, dpi: 1200, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'letter', orientation: 'p' }
+    };
+
+    // New Promise-based usage:
+    html2pdf().set(opt).from(element).save();
+
+    // Old monolithic-style usage:
+    html2pdf(element, opt);
+}
