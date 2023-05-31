@@ -1,5 +1,5 @@
 import drawChart from '../Scripts/drawChart.js'
-import { tableFromJson, widthTable } from "../Scripts/drawTable.js"
+import { tableFromJson, widthTable, heightTable } from "../Scripts/drawTable.js"
 
 let data;
 let ctx;
