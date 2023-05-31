@@ -109,3 +109,9 @@ p{
     font-size: 22px;
     font-family: 'Times New Roman';
 }
+
+.jstfy{
+  margin: 0;
+  text-indent: 2rem;
+  text-align: justify;
+}

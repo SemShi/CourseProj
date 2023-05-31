@@ -7,15 +7,14 @@ let ctx;
 document.getElementById('form').onsubmit = function (){
 try
 {
-    let oldctx = document.getElementById("myChart");
-    oldctx.remove();
-    let oldtable = document.getElementById("table");
-    oldtable.innerHTML = '';
-    let oldReport = document.getElementById("showOtchet");
-    oldReport.innerHTML = '';
+    document.getElementById("myChart").remove();
+    document.getElementById("table").innerHTML = '';
+    document.getElementById("showOtchet").innerHTML = '';
+    document.getElementById("showTable").innerHTML = '';
 }
 catch (ex){}
-    
+    document.getElementById("firstCard").style['display'] = '';
+    document.getElementById("secondCard").style['display'] = '';
     let canvas = document.createElement('canvas');
     canvas.setAttribute("class", "my-4 w-100")
     canvas.setAttribute('id', 'myChart');
@@ -71,13 +70,21 @@ function drawOtchet(data, vivod) {
     var param = document.getElementById("param");
     var paramValue = param.value;
     var div = document.getElementById('showOtchet');
-    div.innerHTML += `<p>При анализе данных была получена выборочная средняя всех интервалов, которая равна ${data.ViborSred}, на ее основе  посчитаем стандартное отклонение: ${data.Otclon}. <br>Эти данные необходимы для нахождения теоритической частоты по функции Гаусса</p>
-    <p>Так как Критерий пирсона равен ${data.KriteriyPirsona}, то при уровне значимости alpha = 0.05 по таблице "Критической точки распределения" значение Hi^2 наблюдаемого должно быть меньше Hi^2 критической, равной 42.8.<br>  
-    В нашем случае Hi^2 наблюдаемое равно: ${data.NabludZnach},значит гипотезу о нормальном распределении ${vivod}.`;
-    if (vivod == "опровергаем") div.innerHTML += "<p>Следовательно мы не можем полностью пологаться на эти данные. Распределение мощностей на выпускаемую продукцию компании не обосновывается данной выборкой.</p>"
+    var resultMsg;
+    if (vivod == "опровергаем") 
+        resultMsg = 'Следовательно, мы не можем полностью пологаться на эти данные. Распределение мощностей на выпускаемую продукцию компании не обосновывается данной выборкой.';
     else {
-        div.innerHTML += "<p>На основе данных составим таблицу с процентным соотношением выпускаемой продукции.</p>"
+        resultMsg = 'На основе данных построена таблица с процентным соотношением выпускаемой продукции:';
         if (paramValue == "Height") heightTable(data.finalObjectsList)
         else widthTable(data.finalObjectsList)
     }
+    div.innerHTML +=
+        `    <h4 class="card-subtitle mb-1 text-muted">Анализ</h4>` +
+        `    <p class="card-text jstfy">При анализе данных была получена выборочная средняя всех интервалов, которая равна <b>${data.ViborSred}</b>. На ее основе  вычислено стандартное отклонение, равное <b>${data.Otclon}</b>.</p>` +
+        `    <p class="card-text jstfy mb-2">Эти данные необходимы для нахождения теоритической частоты по функции Гаусса.</p>` +
+        `    <h4 class="card-subtitle mb-1 text-muted border-top">Критерий пирсона</h4>` +
+        `    <p class="card-text jstfy">Так как Критерий пирсона равен <b>${data.KriteriyPirsona}</b>, то при уровне значимости alpha = <b>0.05</b> по таблице "Критической точки распределения" значение <b>H<sub>i</sub><sup>2</sup></b> наблюдаемого должно быть меньше <b>H<sub>i</sub><sup>2</sup></b> критической, равной <b>42.8</b>.</p>` +
+        `    <p class="card-text jstfy mb-2">В нашем случае <b>H<sub>i</sub><sup>2</sup></b> наблюдаемое равно: <b>${data.NabludZnach.toFixed(2)}</b>, значит гипотезу о нормальном распределении <b>${vivod}</b>.</p>` +
+        `    <h4 class="card-subtitle mb-1 text-muted border-top">Итог</h4>` +
+        `    <p class="card-text jstfy">${resultMsg}</p>`;
 }

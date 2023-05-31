@@ -9,7 +9,8 @@ function tableFromJson(object) {
     }
 
     // Create table.
-    const table = document.getElementById("table");
+    const table = document.createElement("table");
+    table.setAttribute("class", "table table-hover");
 
     // Create table header row using the extracted headers above.
     let tr = table.insertRow(-1);                   // table row.
@@ -70,7 +71,8 @@ function widthTable(data) {
     }
 
     // Create table.
-    const table = document.getElementById("secondTable");
+    const table = document.createElement("table");
+    table.setAttribute("class", "table table-hover");
 
     // Create table header row using the extracted headers above.
     let tr = table.insertRow(-1);                   // table row.
@@ -95,8 +97,6 @@ function widthTable(data) {
     // Now, add the newly created table with json data, to a container.
     const divShowData = document.getElementById('showTable');
     divShowData.appendChild(table);
-
-
 }
 
 function heightTable(data) {
@@ -133,7 +133,8 @@ function heightTable(data) {
     }
 
     // Create table.
-    const table = document.getElementById("secondTable");
+    const table = document.createElement("table");
+    table.setAttribute("class", "table table-hover");
 
     // Create table header row using the extracted headers above.
     let tr = table.insertRow(-1);                   // table row.
