@@ -6,18 +6,16 @@ namespace CourseProj.Services;
 
 public class GetDatasetsService : IGetDatasetsService
 {
-    public async Task<IEnumerable> GetFiles()
+    private char Slash = Path.DirectorySeparatorChar;
+    public async Task<IEnumerable?> GetFiles()
     {
         var actualDataSets = new List<SideBarDatasets>();
-        if (!Path.Exists(Environment.CurrentDirectory + "\\UploadedFiles"))
-        {
-            actualDataSets = null;
-            return actualDataSets;
-        }
+        if (!Path.Exists(Environment.CurrentDirectory + $"{Slash}UploadedFiles"))
+            return null;
 
         await Task.Run(() =>
         {
-            DirectoryInfo dir = new DirectoryInfo(Environment.CurrentDirectory + "\\UploadedFiles");
+            DirectoryInfo dir = new DirectoryInfo(Environment.CurrentDirectory + $"{Slash}UploadedFiles");
             FileInfo[] files = dir.GetFiles("*.csv");
             
             foreach (FileInfo file in files)
@@ -25,15 +23,12 @@ public class GetDatasetsService : IGetDatasetsService
                 actualDataSets.Add(new SideBarDatasets()
                 {
                     FileName = file.Name,
-                    FilePath = Path.Combine(Environment.CurrentDirectory, "UploadedFiles", file.Name).Replace(@"\", @"\\"),
+                    FilePath = Path.Combine(Environment.CurrentDirectory, "UploadedFiles", file.Name).Replace(@$"{Slash}", @$"{Slash}{Slash}"),
                 });
             }
         });
         if (actualDataSets.Count == 0)
-        {
-            actualDataSets = null;
-            return actualDataSets;
-        }
+            return null;
         return actualDataSets;
     }
 }

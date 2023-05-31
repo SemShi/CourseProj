@@ -4,5 +4,5 @@ namespace CourseProj.Services;
 
 public interface IGetDatasetsService
 {
-    Task <IEnumerable> GetFiles();
+    Task <IEnumerable?> GetFiles();
 }
