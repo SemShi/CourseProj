@@ -33,12 +33,19 @@
         @foreach (var item in ViewBag.model)
           {
             <li class="nav-item">
-              <a class="nav-link">
-                <button onclick="ShowSelectedFile(true, '@item.FileName','@item.FilePath')" style="padding: 0; border: none; background: none">
-                <span data-feather="file-text"></span>
-                @item.FileName
-                </button>
-              </a>
+              <div class="btn-group">
+                <a class="nav-link">
+                  <button onclick="ShowSelectedFile(true, '@item.FileName','@item.FilePath')" style="padding: 0; border: none; background: none">
+                    <span data-feather="file-text"></span>
+                    @item.FileName
+                  </button>
+                </a>
+                <a class="nav-link align-self-end">
+                  <button onclick="DeleteFile('@item.FilePath', '@item.FileName')" style="padding: 0; border: none; background: none">
+                    <span data-feather="x-circle"></span>
+                  </button>
+                </a>
+              </div>
             </li>
           }
         </ul>
@@ -46,7 +53,7 @@
     </div>
   </nav>
 
-  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+  <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="main">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">Проверка гипотезы о законе распределения</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
@@ -56,9 +63,9 @@
           <button type="button" class="btn btn-sm btn-outline-secondary"><span data-feather="trending-up"></span></button>
         </div>
         <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="ShowInput()">
-                          <span data-feather="plus"></span>
-                          Загрузить файл
-                        </button>
+          <span data-feather="plus"></span>
+          Загрузить файл
+        </button>
         <button type="button" class="btn btn-sm btn-outline-secondary" onclick="downloadReport()">
           <span data-feather="file"></span>
           Скачать отчет
@@ -98,22 +105,84 @@
     </div>
     <div id="downloadableReport">
       <div id="charts"></div>
-          <div class="card mb-3" style="display: none" id="firstCard">
-            <div class="card-body">
-              <h5 class="card-title text-center">Результаты вычислений</h5>
-              <div id="calcResult"></div>
-          </div>
-          </div>
-          <div class="card mb-3" style="display: none" id="secondCard">
-            <div class="card-body">
-              <div id="showOtchet"></div>
-              <div id="showTable"></div>
-              </div>
-            </div>
+      <div class="card mb-3" style="display: none" id="firstCard">
+        <div class="card-body">
+          <h5 class="card-title text-center">Результаты вычислений</h5>
+          <div id="calcResult"></div>
+        </div>
+      </div>
+      <div class="card mb-3" style="display: none" id="secondCard">
+        <div class="card-body">
+          <div id="showOtchet"></div>
+          <div id="showTable"></div>
+        </div>
+      </div>
     </div>
+    <div id="toast"></div>
   </main>
 </div>
 
+@section Scripts{
+  <script>
+  //Получаем список файлов, находящихся на сервере
+  $(document).ready(function (){
+    GetDatasets();
+  })
+  
+  function GetDatasets(){
+    $.ajax({
+      type: "GET",
+      url: "@Url.Action("GetFiles")",
+      dataType: "json",
+      success: function (result){
+        
+        console.log(result);
+      },
+      error: function (req, status, error){
+        console.log(status);
+      }
+    });
+  }
+  
+  function DeleteFile(filePath, fileName){
+    $.ajax({
+      type: "POST",
+      url: "@Url.Action("DeleteFile")",
+      dataType: "json",
+      data: {filePath: filePath},
+      success: function (result){
+        document.getElementById("toast").appendChild(CreateToast(`Файл <b>${fileName}</b> удалён.`));
+        const newToast = new bootstrap.Toast('.toast');
+        setTimeout(() =>{
+          newToast.show();
+        })
+      },
+      error: function (req, status, error){
+        console.log(status);
+      }
+    });
+  }
+  
+  function CreateToast(BodyMsg, Header = 'Внимание!') {
+    let toast = document.createElement("div");
+    toast.setAttribute("role", "alert");
+    toast.setAttribute("aria-live", "assertive");
+    toast.setAttribute("aria-atomic", "true");
+    toast.setAttribute("class", "toast position-fixed");
+    toast.setAttribute("data-bs-autohide", "true");
+
+    toast.innerHTML =
+        `<div class="toast-header">` +
+        `  <strong class="me-auto">${Header}</strong>` +
+        `  <small>@DateTime.Now.ToShortTimeString()</small>` +
+        `</div>` +
+        `<div class="toast-body">` +
+        ` ${BodyMsg}` +
+        `</div>`;
+    return toast;
+  }
+  </script>
+}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>

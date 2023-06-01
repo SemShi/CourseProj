@@ -60,6 +60,11 @@ catch (ex){}
             drawChart(data.finalObjectsList, ctx)
             if (data.NabludZnach > 43.8) drawOtchet(data, "опровергаем")
             else drawOtchet(data, "подтверждаем")
+            document.getElementById("toast").appendChild(CreateToast('Файл загружен.', 'Успешно!'));
+            const newToast = new bootstrap.Toast('.toast');
+            setTimeout(() =>{
+                newToast.show();
+            })
         }
     }
 }; 

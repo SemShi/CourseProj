@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using CourseProj.Models;
 using CourseProj.Services;
+using CourseProj.Enums;
 
 namespace CourseProj.Controllers;
 
@@ -31,7 +32,20 @@ public class DashboardController : Controller
         ViewBag.model = await _getDatasetsService.GetFiles();
         return View();
     }
-    
+
+    [HttpGet]
+    public async Task<string> GetFiles()
+    {
+        var fileList = await _getDatasetsService.GetFiles();
+        return JsonSerializer.Serialize(fileList);
+    }
+
+    [HttpPost]
+    public async Task<FileOperationResult> DeleteFile(string filePath)
+    {
+        return await _getDatasetsService.DeleteFile(filePath);
+    }
+
     [HttpPost]
     public async Task<string> GetData(FormData formData)
     {
