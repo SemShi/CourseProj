@@ -1,8 +1,4 @@
-﻿var script = document.createElement('script');
-script.src = 'https://code.jquery.com/jquery-3.7.0.min.js'; // Check https://jquery.com/ for the current version
-document.getElementsByTagName('head')[0].appendChild(script);
-
-document.forms['formpost'].addEventListener('submit', function(event) {
+﻿document.forms['formpost'].addEventListener('submit', function(event) {
     // Do something with the form's data here
     this.style['display'] = 'none';
     event.preventDefault();
