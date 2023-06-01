@@ -23,8 +23,8 @@
           </a>
         </li>
       </ul>
-      
-      @if (ViewBag.model is not null)
+      <div id="actualDatasets"></div>
+      @*@if (ViewBag.model is not null)
       {
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
           <span>Ваши дата-сеты</span>
@@ -49,7 +49,7 @@
             </li>
           }
         </ul>
-      }
+      }*@
     </div>
   </nav>
 
@@ -135,8 +135,44 @@
       url: "@Url.Action("GetFiles")",
       dataType: "json",
       success: function (result){
+        let resultArr = [];
+        for(let i in result)
+            resultArr.push([i, result [i]]);
         
-        console.log(result);
+        if (resultArr.length === 0){
+          document.getElementById("actualDatasets").innerHTML = '';
+          return;
+        } 
+        
+        h6 = document.createElement("h6");
+        h6.setAttribute("class", "sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted");
+        span = document.createElement("span");
+        span.innerHTML = 'Ваши дата-сеты';
+        h6.appendChild(span);
+        ul = document.createElement("ul");
+        ul.setAttribute("class", "nav flex-column mb-2");
+         
+        for(let i in resultArr){
+          ul.innerHTML += 
+          `<li class="nav-item">` +
+          `   <div class="btn-group">` +
+          `     <a class="nav-link">` +
+          `       <button onclick="ShowSelectedFile(true, '${resultArr[i][1].FileName}','${resultArr[i][1].FilePath}')" style="padding: 0; border: none; background: none">` +
+          `         <i class="bi bi-file-earmark-bar-graph"></i>` +
+          `           ${resultArr[i][1].FileName}` +
+          `       </button>` +
+          `     </a>` +
+          `     <a class="nav-link align-self-end">` +
+          `       <button onclick="DeleteFile('${resultArr[i][1].FilePath}', '${resultArr[i][1].FileName}')" style="padding: 0; border: none; background: none">` +
+          `         <i class="bi bi-trash3"></i>` +
+          `       </button>` +
+          `     </a>` +
+          `  </div>` +
+          `</li>`;
+        }
+        document.getElementById("actualDatasets").innerHTML = '';
+        document.getElementById("actualDatasets").appendChild(h6);
+        document.getElementById("actualDatasets").appendChild(ul);
       },
       error: function (req, status, error){
         console.log(status);
@@ -153,9 +189,8 @@
       success: function (result){
         document.getElementById("toast").appendChild(CreateToast(`Файл <b>${fileName}</b> удалён.`));
         const newToast = new bootstrap.Toast('.toast');
-        setTimeout(() =>{
-          newToast.show();
-        })
+        newToast.show();
+        GetDatasets();
       },
       error: function (req, status, error){
         console.log(status);

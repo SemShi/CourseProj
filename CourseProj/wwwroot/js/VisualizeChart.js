@@ -67,6 +67,9 @@ catch (ex){}
             })
         }
     }
+    setTimeout(() =>{
+        GetDatasets();
+    }, 50)
 }; 
 
 

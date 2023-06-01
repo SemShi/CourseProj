@@ -7,7 +7,7 @@ namespace CourseProj.Services;
 
 public class GetDatasetsService : IGetDatasetsService
 {
-    private readonly char _slash = Path.DirectorySeparatorChar;
+    private readonly string _slash = Path.DirectorySeparatorChar.ToString();
     public async Task<IEnumerable?> GetFiles()
     {
         var actualDataSets = new List<SideBarDatasets>();
@@ -24,7 +24,7 @@ public class GetDatasetsService : IGetDatasetsService
                 actualDataSets.Add(new SideBarDatasets()
                 {
                     FileName = file.Name,
-                    FilePath = Path.Combine(Environment.CurrentDirectory, "UploadedFiles", file.Name).Replace(@$"{_slash}", @$"{_slash}{_slash}"),
+                    FilePath = Path.Combine(Environment.CurrentDirectory, "UploadedFiles", file.Name).Replace(@$"{_slash}", @$"{_slash}{_slash}")
                 });
             }
         });

@@ -26,10 +26,8 @@ public class DashboardController : Controller
         _getDatasetsService = getDatasetsService;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
-        ViewBag.Result = false;
-        ViewBag.model = await _getDatasetsService.GetFiles();
         return View();
     }
 
@@ -57,7 +55,7 @@ public class DashboardController : Controller
         }
         else
             filePath = formData.FilePath!;
-
+        
         var firstData = formData.Param == "Weight" ? 
             await _raschetDannih.GetHeight(filePath, formData.Gender) : 
             await _raschetDannih.GetWeight(filePath, formData.Gender);
