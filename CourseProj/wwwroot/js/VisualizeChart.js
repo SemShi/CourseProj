@@ -65,12 +65,23 @@ catch (ex){}
             setTimeout(() =>{
                 newToast.show();
             })
+            ActivateButtons();
+        }
+        else if (xhr.readyState == 4){
+            document.getElementById("error").innerHTML = 
+                `<div class="alert alert-danger alert-dismissible fade show" role="alert">` +
+                `  <strong>Ошибка!</strong> Не удалось обработать файл.` +
+                `  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>` +
+                `</div>`;
+            ShowInput();
+            document.getElementById("firstCard").style['display'] = 'none';
+            document.getElementById("secondCard").style['display'] = 'none';
         }
     }
     setTimeout(() =>{
         GetDatasets();
     }, 50)
-    ActivateButtons();
+    
 }; 
 
 

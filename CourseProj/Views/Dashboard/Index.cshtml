@@ -31,7 +31,6 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">Проверка гипотезы о законе распределения</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
-        
         <div class="btn-group me-2">
           <button id="groupBtn1" type="button" class="btn btn-sm btn-outline-secondary" disabled onclick="ChangeChartToBar()"><span data-feather="bar-chart-2"></span></button>
           <button id="groupBtn2" type="button" class="btn btn-sm btn-outline-secondary" disabled onclick="ChangeChartToLine()"><span data-feather="trending-up"></span></button>
@@ -45,11 +44,12 @@
           Скачать отчет
         </button>
         <div class="btn-toolbar mb-2 mb-md-0">
-          
+
         </div>
       </div>
     </div>
     <div class="my-4 w-100" id="uploadFile" width="900" height="380">
+      <div id="error"></div>
       <form method="post" enctype="multipart/form-data" id="form" name="formpost" class="needs-validation">
         <div class="mb-3" id="hiddenSelected" style="display: none">
           <label id="hiddenLabel" class="form-label"></label>
@@ -68,8 +68,8 @@
             <option value="Female">Женщина</option>
           </select>
           <div class="invalid-feedback">
-                Выберите пол
-              </div>
+            Выберите пол
+          </div>
         </div>
         <div class="mb-3">
           <select class="form-select" id="param" name="param" required>
@@ -78,8 +78,8 @@
             <option value="Weight">Вес</option>
           </select>
           <div class="invalid-feedback">
-                Выберите параметр
-              </div>
+            Выберите параметр
+          </div>
         </div>
         <button class="btn btn-primary" id="submit" type="submit">Визуализировать</button>
       </form>
