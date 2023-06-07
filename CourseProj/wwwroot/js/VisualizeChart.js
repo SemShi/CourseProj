@@ -1,4 +1,4 @@
-import drawChart from '../Scripts/drawChart.js'
+//import drawChart from '../Scripts/drawChart.js'
 import { tableFromJson, widthTable, heightTable } from "../Scripts/drawTable.js"
 
 let data;
@@ -57,7 +57,7 @@ catch (ex){}
             data = JSON.parse(xhr.responseText)
             console.log(data)
             tableFromJson(data.finalObjectsList)
-            drawChart(data.finalObjectsList, ctx)
+            drawChart(data.finalObjectsList, ctx, paramValue)
             if (data.NabludZnach > 43.8) drawOtchet(data, "опровергаем")
             else drawOtchet(data, "подтверждаем")
             document.getElementById("toast").appendChild(CreateToast('Файл загружен.', 'Успешно!'));
@@ -70,6 +70,7 @@ catch (ex){}
     setTimeout(() =>{
         GetDatasets();
     }, 50)
+    ActivateButtons();
 }; 
 
 

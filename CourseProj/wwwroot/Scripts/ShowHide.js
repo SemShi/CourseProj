@@ -18,12 +18,14 @@ function ShowSelectedFile(Visible = true, FileName = null, FilePath = null){
     if(Visible){
         $('#hiddenSelected').show(500);
         document.getElementById("fileUpload").style['display'] = 'none';
+        document.getElementById("file").removeAttribute("required");
         document.getElementById("hiddenSelected").setAttribute('data-value', FilePath);
         document.getElementById("hiddenLabel").innerHTML = 'Выбран файл: ' + '<b>'+FileName+'</b>';
     }
     else{
         $('#fileUpload').show(500);
         document.getElementById("hiddenSelected").style['display'] = 'none';
+        document.getElementById("file").setAttribute("required", "required");
         document.getElementById("hiddenSelected").removeAttribute('value');
         document.getElementById("hiddenLabel").innerHTML = '';
     }
@@ -45,6 +47,27 @@ function downloadReport() {
 
     // Old monolithic-style usage:
     html2pdf(element, opt);
+}
+
+function ActivateButtons(){
+    $('#groupBtn1').removeAttr("disabled");
+    $('#groupBtn2').removeAttr("disabled");
+    $('#showInputBtn').removeAttr("disabled");
+    $('#downloadBtn').removeAttr("disabled");
+}
+
+function ChangeChartToLine(){
+    Chart.helpers.each(Chart.instances, function(chart){
+        chart.config.type = 'line';
+        chart.update();
+    })
+}
+
+function ChangeChartToBar(){
+    Chart.helpers.each(Chart.instances, function(chart){
+        chart.config.type = 'bar';
+        chart.update();
+    })
 }
 
 function GetCurrentDateTime(){

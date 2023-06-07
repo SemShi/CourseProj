@@ -24,32 +24,6 @@
         </li>
       </ul>
       <div id="actualDatasets"></div>
-      @*@if (ViewBag.model is not null)
-      {
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Ваши дата-сеты</span>
-        </h6>
-        <ul class="nav flex-column mb-2">
-        @foreach (var item in ViewBag.model)
-          {
-            <li class="nav-item">
-              <div class="btn-group">
-                <a class="nav-link">
-                  <button onclick="ShowSelectedFile(true, '@item.FileName','@item.FilePath')" style="padding: 0; border: none; background: none">
-                    <span data-feather="file-text"></span>
-                    @item.FileName
-                  </button>
-                </a>
-                <a class="nav-link align-self-end">
-                  <button onclick="DeleteFile('@item.FilePath', '@item.FileName')" style="padding: 0; border: none; background: none">
-                    <span data-feather="x-circle"></span>
-                  </button>
-                </a>
-              </div>
-            </li>
-          }
-        </ul>
-      }*@
     </div>
   </nav>
 
@@ -59,14 +33,14 @@
       <div class="btn-toolbar mb-2 mb-md-0">
         
         <div class="btn-group me-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary"><span data-feather="bar-chart-2"></span></button>
-          <button type="button" class="btn btn-sm btn-outline-secondary"><span data-feather="trending-up"></span></button>
+          <button id="groupBtn1" type="button" class="btn btn-sm btn-outline-secondary" disabled onclick="ChangeChartToBar()"><span data-feather="bar-chart-2"></span></button>
+          <button id="groupBtn2" type="button" class="btn btn-sm btn-outline-secondary" disabled onclick="ChangeChartToLine()"><span data-feather="trending-up"></span></button>
         </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="ShowInput()">
+        <button id="showInputBtn" type="button" class="btn btn-sm btn-outline-secondary me-2" disabled onclick="ShowInput()">
           <span data-feather="plus"></span>
           Загрузить файл
         </button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="downloadReport()">
+        <button id="downloadBtn" type="button" class="btn btn-sm btn-outline-secondary" disabled onclick="downloadReport()">
           <span data-feather="file"></span>
           Скачать отчет
         </button>
@@ -76,29 +50,36 @@
       </div>
     </div>
     <div class="my-4 w-100" id="uploadFile" width="900" height="380">
-      <form method="post" enctype="multipart/form-data" id="form" name="formpost">
+      <form method="post" enctype="multipart/form-data" id="form" name="formpost" class="needs-validation">
         <div class="mb-3" id="hiddenSelected" style="display: none">
           <label id="hiddenLabel" class="form-label"></label>
           <div onclick="ShowSelectedFile(false)" id="сancel" class="form-text" style="cursor: pointer">Отменить выбор файла</div>
         </div>
         <div class="mb-3" id="fileUpload">
           <label for="file" class="form-label">Загрузите файл</label>
-          <input class="form-control" type="file" id="file" name="file" accept="text/csv">
+          <input class="form-control" type="file" id="file" name="file" accept="text/csv" required>
+          <div class="invalid-feedback">Выберите файл..</div>
           <div id="emailHelp" class="form-text">Максимальный размер файла 28 мегабайт.</div>
         </div>
         <div class="mb-3">
-          <select class="form-select" id="gender" name="gender">
-            <option selected disabled="disabled">Выберите пол</option>
+          <select class="form-select" id="gender" name="gender" required>
+            <option selected disabled="disabled" value="">Выберите пол</option>
             <option value="Male">Мужчина</option>
             <option value="Female">Женщина</option>
           </select>
+          <div class="invalid-feedback">
+                Выберите пол
+              </div>
         </div>
         <div class="mb-3">
-          <select class="form-select" id="param" name="param">
-            <option selected disabled="disabled">Выберите пераметр</option>
+          <select class="form-select" id="param" name="param" required>
+            <option selected disabled="disabled" value="">Выберите пераметр</option>
             <option value="Height">Рост</option>
             <option value="Weight">Вес</option>
           </select>
+          <div class="invalid-feedback">
+                Выберите параметр
+              </div>
         </div>
         <button class="btn btn-primary" id="submit" type="submit">Визуализировать</button>
       </form>
@@ -223,3 +204,4 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
 <script type="module" src="~/js/VisualizeChart.js" asp-append-version="true" ></script>
 <script src="~/Scripts/ShowHide.js" asp-append-version="true" ></script>
+<script src="~/Scripts/drawChart.js" asp-append-version="true" ></script>

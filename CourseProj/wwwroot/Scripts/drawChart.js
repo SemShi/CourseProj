@@ -1,4 +1,4 @@
-export default function drawChart(arr, ctx) {
+function drawChart(arr, ctx, param) {
     let intervalArr = [];
     for (let elem of arr) {
         intervalArr.push(elem.Interval);
@@ -17,23 +17,39 @@ export default function drawChart(arr, ctx) {
             labels: intervalArr,
             datasets: [
                 {
-                    label: "Fact chastota",
+                    label: "Фактическая частота",
                     data: dataArr,
                     borderWidth: 1,
-                    backgroundColor: '#9BD0F5'
+                    backgroundColor: '#9BD0F5',
                 },
                 {
-                    label: "Teor chastota",
+                    label: "Теоритическая частота",
                     data: teorFreq,
                     borderWidth: 1,
                     backgroundColor: '#FFB1C1'
-                }]
+                }],
+            
         },
         options: {
             scales: {
-                y: {
-                    beginAtZero: true,
-                }
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                    scaleLabel:{
+                        display: true,
+                        labelString: 'Частота'
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: false,
+                    },
+                    scaleLabel:{
+                        display: true,
+                        labelString: param == 'Height' ? 'Рост' : 'Вес'
+                    }
+                }]
             }
         }
     });
